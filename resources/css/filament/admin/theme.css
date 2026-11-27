@@ -1,0 +1,65 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/* Soft Theme-inspired aesthetic: warm cream canvas, serif headings, filled inputs, and pill actions */
+.fi-body {
+    background-color: #f6f3ec;
+}
+
+.dark .fi-body {
+    background-color: #161513;
+}
+
+.fi-simple-layout {
+    background-color: #f6f3ec;
+}
+
+.dark .fi-simple-layout {
+    background-color: #161513;
+}
+
+.fi-logo,
+.fi-header-heading,
+.fi-simple-header-heading,
+.fi-section-header-heading {
+    @apply font-serif tracking-tight;
+}
+
+.fi-sidebar {
+    @apply lg:border-e lg:border-gray-200/70 lg:bg-transparent dark:lg:border-white/10;
+}
+
+.fi-sidebar-item-btn,
+.fi-sidebar-database-notifications-btn {
+    @apply rounded-full px-3;
+}
+
+.fi-sidebar-item.fi-active>.fi-sidebar-item-btn {
+    @apply bg-primary-100/90 text-primary-800 dark:bg-primary-950/60 dark:text-primary-300;
+}
+
+.fi-sidebar-item.fi-active>.fi-sidebar-item-btn>.fi-icon,
+.fi-sidebar-item.fi-active>.fi-sidebar-item-btn>.fi-sidebar-item-label {
+    @apply text-primary-800 dark:text-primary-300;
+}
+
+.fi-global-search-ctn .fi-input-wrp {
+    @apply rounded-full;
+}
+
+.fi-input-wrp {
+    @apply rounded-xl bg-gray-100/90 shadow-none ring-gray-950/8 dark:bg-white/6 dark:ring-white/15;
+}
+
+.fi-btn,
+.fi-badge {
+    @apply rounded-full;
+}
+
+.fi-section:not(.fi-section-not-contained):not(.fi-aside),
+.fi-ta-ctn,
+.fi-simple-main {
+    @apply rounded-2xl shadow-xs ring-gray-950/6 dark:ring-white/10;
+}
