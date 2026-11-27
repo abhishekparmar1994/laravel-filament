@@ -5,8 +5,8 @@ namespace App\Models;
 use App\Models\Concerns\LogsModelActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Schema;
 use Throwable;
 
 #[Fillable(['key', 'value', 'group', 'type'])]
@@ -17,24 +17,20 @@ class Setting extends Model
     private const CACHE_PREFIX = 'app_setting:';
 
     /**
-     * Retrieve a setting value by key with fallback when missing or before migrations run.
+     * Retrieve a setting value by key from cache, querying only on cache miss.
      */
     public static function getValue(string $key, mixed $default = null): mixed
     {
         try {
-            if (! Schema::hasTable('settings')) {
-                return $default;
-            }
-        } catch (Throwable) {
+            $cached = Cache::rememberForever(
+                self::CACHE_PREFIX.$key,
+                fn (): mixed => static::query()->where('key', $key)->value('value'),
+            );
+
+            return $cached ?? $default;
+        } catch (QueryException|Throwable) {
             return $default;
         }
-
-        $cached = Cache::rememberForever(
-            self::CACHE_PREFIX.$key,
-            fn (): mixed => static::query()->where('key', $key)->value('value'),
-        );
-
-        return $cached ?? $default;
     }
 
     /**

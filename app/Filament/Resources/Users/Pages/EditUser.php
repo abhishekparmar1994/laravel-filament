@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Users\Pages;
 
 use App\Filament\Resources\Users\UserResource;
+use App\Support\DashboardCache;
+use App\Support\PermissionCache;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
@@ -22,5 +24,11 @@ class EditUser extends EditRecord
             ForceDeleteAction::make(),
             RestoreAction::make(),
         ];
+    }
+
+    protected function afterSave(): void
+    {
+        PermissionCache::flush();
+        DashboardCache::flush();
     }
 }

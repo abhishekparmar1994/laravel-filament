@@ -7,7 +7,7 @@ use Filament\Support\Colors\Color;
 
 class ThemeManager
 {
-    public const DEFAULT_THEME = 'soft';
+    public const DEFAULT_THEME = 'modern';
 
     /**
      * Metadata and Filament color palettes for each built-in admin theme preset.
@@ -17,9 +17,17 @@ class ThemeManager
     public static function presets(): array
     {
         return [
+            'modern' => [
+                'label' => 'Modern SaaS (Indigo & Slate)',
+                'description' => 'Crisp slate canvas, floating glass topbar, elevated cards, and modern indigo accents.',
+                'colors' => [
+                    'primary' => Color::Indigo,
+                    'gray' => Color::Slate,
+                ],
+            ],
             'soft' => [
                 'label' => 'Soft (Sage & Cream)',
-                'description' => 'Warm cream canvas, Lora serif headings, filled inputs, and pill actions.',
+                'description' => 'Warm cream canvas, Lora serif headings, sage accents, and soft elevated surfaces.',
                 'colors' => [
                     'primary' => [
                         50 => '#f3f7f4',
@@ -43,14 +51,6 @@ class ThemeManager
                 'colors' => [
                     'primary' => Color::Rose,
                     'gray' => Color::Zinc,
-                ],
-            ],
-            'indigo' => [
-                'label' => 'Indigo (Crisp Slate)',
-                'description' => 'Classic SaaS indigo highlights paired with clean slate neutrals.',
-                'colors' => [
-                    'primary' => Color::Indigo,
-                    'gray' => Color::Slate,
                 ],
             ],
             'noir' => [

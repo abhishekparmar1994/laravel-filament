@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Support\DashboardCache;
 use Filament\Widgets\ChartWidget;
 
 class UsersByRoleChart extends ChartWidget
@@ -21,26 +22,33 @@ class UsersByRoleChart extends ChartWidget
      */
     protected function getData(): array
     {
-        $roles = Role::query()
-            ->withCount('users')
-            ->orderByDesc('users_count')
-            ->get(['id', 'name']);
+        $distribution = DashboardCache::remember('users_by_role', function (): array {
+            $roles = Role::query()
+                ->withCount('users')
+                ->orderByDesc('users_count')
+                ->get(['id', 'name']);
 
-        $labels = $roles->pluck('name')->all();
-        $counts = $roles->pluck('users_count')->map(fn (mixed $count): int => (int) $count)->all();
+            $labels = $roles->pluck('name')->all();
+            $counts = $roles->pluck('users_count')->map(fn (mixed $count): int => (int) $count)->all();
 
-        $unassignedCount = User::query()->doesntHave('roles')->count();
+            $unassignedCount = User::query()->doesntHave('roles')->count();
 
-        if ($unassignedCount > 0 || empty($labels)) {
-            $labels[] = 'Unassigned';
-            $counts[] = $unassignedCount;
-        }
+            if ($unassignedCount > 0 || empty($labels)) {
+                $labels[] = 'Unassigned';
+                $counts[] = $unassignedCount;
+            }
+
+            return [
+                'labels' => $labels,
+                'counts' => $counts,
+            ];
+        });
 
         return [
             'datasets' => [
                 [
                     'label' => 'Users',
-                    'data' => $counts,
+                    'data' => $distribution['counts'],
                     'backgroundColor' => [
                         '#3a664b',
                         '#719f82',
@@ -50,7 +58,7 @@ class UsersByRoleChart extends ChartWidget
                     ],
                 ],
             ],
-            'labels' => $labels,
+            'labels' => $distribution['labels'],
         ];
     }
 

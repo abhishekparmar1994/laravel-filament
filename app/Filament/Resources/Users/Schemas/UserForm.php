@@ -13,9 +13,11 @@ class UserForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 Section::make('User Details')
                     ->columns(2)
+                    ->columnSpanFull()
                     ->schema([
                         TextInput::make('name')
                             ->required()

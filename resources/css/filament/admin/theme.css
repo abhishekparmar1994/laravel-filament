@@ -3,121 +3,223 @@
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
 
-/* Shared smooth transitions & card rounding */
-.fi-section:not(.fi-section-not-contained):not(.fi-aside),
-.fi-ta-ctn,
-.fi-simple-main {
-    @apply rounded-2xl shadow-xs ring-gray-950/6 dark:ring-white/10;
+/* ==========================================================================
+   Modern 2026 SaaS Layout System (Shared across all presets)
+   ========================================================================== */
+
+.fi-body {
+    background-color: #f8fafc;
 }
 
-/* Soft Theme (default) */
+.dark .fi-body {
+    background-color: #09090b;
+}
+
+.fi-simple-layout {
+    background:
+        radial-gradient(circle at 18% 15%, color-mix(in oklab, var(--primary-500) 11%, transparent), transparent 42%),
+        radial-gradient(circle at 82% 85%, color-mix(in oklab, var(--primary-400) 10%, transparent), transparent 45%),
+        #f8fafc;
+}
+
+.dark .fi-simple-layout {
+    background:
+        radial-gradient(circle at 18% 15%, color-mix(in oklab, var(--primary-500) 16%, transparent), transparent 42%),
+        radial-gradient(circle at 82% 85%, color-mix(in oklab, var(--primary-400) 12%, transparent), transparent 45%),
+        #09090b;
+}
+
+/* Floating glass topbar */
+.fi-topbar {
+    @apply border-b border-gray-200/75 bg-white/80 shadow-none ring-0 backdrop-blur-xl dark:border-white/10 dark:bg-gray-900/80;
+}
+
+/* Sleek sidebar rail */
+.fi-sidebar {
+    @apply lg:border-e lg:border-gray-200/75 lg:bg-white/85 lg:backdrop-blur-md dark:lg:border-white/10 dark:lg:bg-gray-900/85;
+}
+
+.fi-sidebar-group-label {
+    @apply text-[11px] font-semibold tracking-wider text-gray-400 uppercase dark:text-gray-500;
+}
+
+.fi-sidebar-item-btn,
+.fi-sidebar-database-notifications-btn {
+    @apply rounded-xl px-3 py-2 transition-all duration-150;
+}
+
+.fi-sidebar-item.fi-active>.fi-sidebar-item-btn {
+    @apply bg-primary-50/90 text-primary-700 ring-1 ring-primary-500/15 shadow-2xs dark:bg-primary-950/60 dark:text-primary-300 dark:ring-primary-400/20;
+}
+
+.fi-sidebar-item.fi-active>.fi-sidebar-item-btn>.fi-icon,
+.fi-sidebar-item.fi-active>.fi-sidebar-item-btn>.fi-sidebar-item-label {
+    @apply font-semibold text-primary-700 dark:text-primary-300;
+}
+
+/* Crisp elevated cards, charts, tables & auth card */
+.fi-section:not(.fi-section-not-contained):not(.fi-aside),
+.fi-ta-ctn,
+.fi-wi-stats-overview-stat,
+.fi-wi-chart {
+    @apply rounded-2xl bg-white ring-1 ring-gray-950/6 shadow-[0_1px_2px_rgba(15, 23, 42, 0.04), 0_8px_24px_-12px_rgba(15, 23, 42, 0.08)] dark:bg-gray-900 dark:ring-white/10 dark:shadow-none;
+}
+
+.fi-wi-stats-overview-stat {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(15, 23, 42, 0.12)];
+}
+
+.fi-simple-main {
+    @apply rounded-3xl bg-white/95 ring-1 ring-gray-950/6 shadow-xl shadow-gray-950/5 backdrop-blur-md dark:bg-gray-900/95 dark:ring-white/10;
+}
+
+/* Crisp inputs & buttons */
+.fi-input-wrp {
+    @apply rounded-xl bg-white shadow-2xs ring-1 ring-gray-200/90 transition duration-150 focus-within:ring-2 focus-within:ring-primary-500/35 dark:bg-white/5 dark:ring-white/15;
+}
+
+.fi-btn {
+    @apply rounded-xl font-medium transition duration-150 active:scale-[0.98];
+}
+
+.fi-badge {
+    @apply rounded-full;
+}
+
+/* Polished table headers & rows */
+.fi-ta-header-toolbar {
+    @apply bg-gray-50/60 dark:bg-white/2;
+}
+
+.fi-ta-row {
+    @apply transition-colors duration-100;
+}
+
+/* Clean card-style notification items inside the normal right-docked panel */
+.fi-no-database.fi-modal .fi-modal-window-ctn>.fi-modal-window .fi-modal-content {
+    @apply p-4;
+}
+
+.fi-no-database.fi-modal .fi-modal-window-ctn>.fi-modal-window .fi-modal-content .fi-no-notifications {
+    @apply flex flex-col gap-y-2.5 divide-y-0;
+}
+
+.fi-no-database.fi-modal .fi-modal-window-ctn>.fi-modal-window .fi-modal-content .fi-no-notifications> :last-child {
+    @apply border-b-0;
+}
+
+.fi-no-database .fi-no-notification {
+    @apply rounded-xl border border-gray-200/80 bg-gray-50/70 p-4 transition duration-150 hover:bg-white hover:shadow-xs dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/8;
+}
+
+.fi-no-database .fi-no-notification-unread-ctn {
+    @apply before:start-1.5 before:top-3 before:h-[calc(100%-1.5rem)] before:w-1 before:rounded-full;
+}
+
+/* ==========================================================================
+   Theme Preset Accents
+   ========================================================================== */
+
+/* Soft (Sage & Cream) */
 :root[data-theme='soft'] .fi-body,
-:root[data-theme='soft'] .fi-simple-layout,
-:root:not([data-theme]) .fi-body,
-:root:not([data-theme]) .fi-simple-layout {
-    background-color: #f6f3ec;
+:root[data-theme='soft'] .fi-simple-layout {
+    background-color: #faf8f4;
 }
 
 :root[data-theme='soft'].dark .fi-body,
-:root[data-theme='soft'].dark .fi-simple-layout,
-:root:not([data-theme]).dark .fi-body,
-:root:not([data-theme]).dark .fi-simple-layout {
-    background-color: #161513;
+:root[data-theme='soft'].dark .fi-simple-layout {
+    background-color: #141311;
 }
 
 :root[data-theme='soft'] .fi-logo,
 :root[data-theme='soft'] .fi-header-heading,
-:root[data-theme='soft'] .fi-simple-header-heading,
-:root[data-theme='soft'] .fi-section-header-heading,
-:root:not([data-theme]) .fi-logo,
-:root:not([data-theme]) .fi-header-heading,
-:root:not([data-theme]) .fi-simple-header-heading,
-:root:not([data-theme]) .fi-section-header-heading {
+:root[data-theme='soft'] .fi-simple-header-heading {
     @apply font-serif tracking-tight;
 }
 
-:root[data-theme='soft'] .fi-sidebar,
-:root:not([data-theme]) .fi-sidebar {
-    @apply lg:border-e lg:border-gray-200/70 lg:bg-transparent dark:lg:border-white/10;
-}
-
-:root[data-theme='soft'] .fi-sidebar-item-btn,
-:root[data-theme='soft'] .fi-sidebar-database-notifications-btn,
-:root:not([data-theme]) .fi-sidebar-item-btn,
-:root:not([data-theme]) .fi-sidebar-database-notifications-btn {
-    @apply rounded-full px-3;
-}
-
-:root[data-theme='soft'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn,
-:root:not([data-theme]) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
-    @apply bg-primary-100/90 text-primary-800 dark:bg-primary-950/60 dark:text-primary-300;
-}
-
-:root[data-theme='soft'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon,
-:root[data-theme='soft'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label,
-:root:not([data-theme]) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon,
-:root:not([data-theme]) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
-    @apply text-primary-800 dark:text-primary-300;
-}
-
-:root[data-theme='soft'] .fi-global-search-ctn .fi-input-wrp,
-:root[data-theme='soft'] .fi-btn,
-:root[data-theme='soft'] .fi-badge,
-:root:not([data-theme]) .fi-global-search-ctn .fi-input-wrp,
-:root:not([data-theme]) .fi-btn,
-:root:not([data-theme]) .fi-badge {
-    @apply rounded-full;
-}
-
-:root[data-theme='soft'] .fi-input-wrp,
-:root:not([data-theme]) .fi-input-wrp {
-    @apply rounded-xl bg-gray-100/90 shadow-none ring-gray-950/8 dark:bg-white/6 dark:ring-white/15;
-}
-
-/* Rose Theme */
+/* Rose */
 :root[data-theme='rose'] .fi-body {
-    @apply bg-primary-50/35 dark:bg-gray-950;
+    @apply bg-primary-50/30 dark:bg-gray-950;
 }
 
-:root[data-theme='rose'] .fi-simple-layout {
-    @apply bg-gradient-to-br from-primary-50 via-white to-primary-100/60 dark:from-gray-950 dark:via-gray-950 dark:to-primary-950/30;
-}
-
-:root[data-theme='rose'] .fi-sidebar {
-    @apply lg:border-e lg:border-gray-200/80 lg:bg-white/85 lg:backdrop-blur-md dark:lg:border-white/10 dark:lg:bg-gray-900/85;
-}
-
-:root[data-theme='rose'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
-    @apply bg-primary-50 ring-1 ring-primary-200/70 dark:bg-primary-950/60 dark:ring-primary-800/50;
-}
-
-/* Indigo Theme */
-:root[data-theme='indigo'] .fi-body {
-    @apply bg-gray-50 dark:bg-gray-950;
-}
-
-:root[data-theme='indigo'] .fi-sidebar {
-    @apply lg:border-e lg:border-gray-200/80 lg:bg-white dark:lg:border-white/10 dark:lg:bg-gray-900;
-}
-
-:root[data-theme='indigo'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
-    @apply bg-primary-50/90 dark:bg-primary-950/60;
-}
-
-/* Noir Theme */
+/* Noir */
 :root[data-theme='noir'] .fi-body {
     @apply bg-gray-100 dark:bg-gray-950;
 }
 
-:root[data-theme='noir'] .fi-sidebar {
-    @apply lg:border-e lg:border-gray-200 lg:bg-white/95 dark:lg:border-white/10 dark:lg:bg-gray-950;
+:root[data-theme='noir'] .fi-sidebar-item.fi-active>.fi-sidebar-item-btn {
+    @apply bg-gray-900 text-white ring-gray-900 dark:bg-white/10 dark:text-primary-400 dark:ring-white/15;
 }
 
-:root[data-theme='noir'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
-    @apply bg-gray-900 text-white dark:bg-white/10 dark:text-primary-400;
-}
-
-:root[data-theme='noir'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon,
-:root[data-theme='noir'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
+:root[data-theme='noir'] .fi-sidebar-item.fi-active>.fi-sidebar-item-btn>.fi-icon,
+:root[data-theme='noir'] .fi-sidebar-item.fi-active>.fi-sidebar-item-btn>.fi-sidebar-item-label {
     @apply text-white dark:text-primary-400;
+}
+
+/* ==========================================================================
+   Unread Database Notifications Pulse & Bell Ring
+   ========================================================================== */
+
+@keyframes fi-notification-badge-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary-500) 55%, transparent);
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: 0.78;
+        box-shadow: 0 0 0 6px color-mix(in oklab, var(--primary-500) 0%, transparent);
+    }
+}
+
+@keyframes fi-notification-bell-ring {
+
+    0%,
+    78%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    82% {
+        transform: rotate(14deg);
+    }
+
+    86% {
+        transform: rotate(-12deg);
+    }
+
+    90% {
+        transform: rotate(8deg);
+    }
+
+    94% {
+        transform: rotate(-6deg);
+    }
+}
+
+.fi-sidebar-database-notifications-btn-badge-ctn>.fi-badge,
+.fi-topbar-database-notifications-btn .fi-badge {
+    @apply bg-primary-600 text-white ring-primary-600/20 dark:bg-primary-500 dark:text-gray-950;
+    animation: fi-notification-badge-pulse 1.6s ease-in-out infinite;
+}
+
+.fi-sidebar-database-notifications-btn:has(.fi-sidebar-database-notifications-btn-badge-ctn)>.fi-icon,
+.fi-topbar-database-notifications-btn:has(.fi-badge)>.fi-icon {
+    @apply text-primary-600 dark:text-primary-400;
+    transform-origin: top center;
+    animation: fi-notification-bell-ring 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .fi-sidebar-database-notifications-btn-badge-ctn>.fi-badge,
+    .fi-topbar-database-notifications-btn .fi-badge,
+    .fi-sidebar-database-notifications-btn:has(.fi-sidebar-database-notifications-btn-badge-ctn)>.fi-icon,
+    .fi-topbar-database-notifications-btn:has(.fi-badge)>.fi-icon {
+        animation: none;
+    }
 }

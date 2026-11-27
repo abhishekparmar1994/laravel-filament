@@ -7,6 +7,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class PermissionsTable
@@ -27,17 +28,26 @@ class PermissionsTable
                     ->placeholder('General')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('roles_count')
+                TextColumn::make('roles.name')
                     ->label('Roles')
+                    ->badge()
+                    ->placeholder('None')
+                    ->searchable(),
+                TextColumn::make('roles_count')
+                    ->label('Role Count')
                     ->counts('roles')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload(),
             ])
             ->recordActions([
                 EditAction::make(),

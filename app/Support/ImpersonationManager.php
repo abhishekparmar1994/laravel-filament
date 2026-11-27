@@ -43,13 +43,19 @@ class ImpersonationManager
             throw new InvalidArgumentException('You are not authorized to impersonate this user.');
         }
 
-        // Preserve the original admin ID across session regeneration when swapping users.
+        // Set session key before Auth::login so the Login listener knows this is an impersonated session.
         $originId = static::impersonatorId() ?? $impersonator->id;
+        session()->put(self::SESSION_KEY, $originId);
 
         static::recordEvent($impersonator->id, $target, 'impersonated', "Started impersonating {$target->email}");
 
         Auth::login($target);
-        session()->put(self::SESSION_KEY, $originId);
+
+        SystemNotifier::notifyAdmins(
+            'User Impersonation Started',
+            "{$impersonator->email} started impersonating {$target->email}.",
+            'warning',
+        );
     }
 
     public static function stop(): bool

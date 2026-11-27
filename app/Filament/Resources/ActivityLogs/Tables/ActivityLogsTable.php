@@ -16,11 +16,11 @@ class ActivityLogsTable
             ->columns([
                 TextColumn::make('event')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'created' => 'success',
                         'updated' => 'info',
                         'deleted' => 'danger',
-                        'restored' => 'warning',
+                        'restored', 'impersonated' => 'warning',
                         default => 'gray',
                     })
                     ->sortable(),
@@ -33,7 +33,7 @@ class ActivityLogsTable
                     ->sortable(),
                 TextColumn::make('subject_type')
                     ->label('Resource')
-                    ->formatStateUsing(fn (?string $state): string => $state ? class_basename($state) : '-')
+                    ->formatStateUsing(fn(?string $state): string => $state ? class_basename($state) : '-')
                     ->sortable(),
                 TextColumn::make('ip_address')
                     ->label('IP')
@@ -51,6 +51,8 @@ class ActivityLogsTable
                         'updated' => 'Updated',
                         'deleted' => 'Deleted',
                         'restored' => 'Restored',
+                        'impersonated' => 'Impersonated',
+                        'stopped_impersonation' => 'Stopped Impersonation',
                     ]),
             ])
             ->recordActions([

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Users\Pages;
 
 use App\Filament\Resources\Users\UserResource;
 use App\Models\User;
+use App\Support\SystemNotifier;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\FileUpload;
@@ -50,6 +51,12 @@ class ListUsers extends ListRecords
 
                     $result = static::importFromCsvContent((string) $disk->get($path));
                     $disk->delete($path);
+
+                    SystemNotifier::notifyAdmins(
+                        'Users CSV Import Completed',
+                        "Imported {$result['imported']} user(s), skipped {$result['skipped']}.",
+                        'success',
+                    );
 
                     Notification::make()
                         ->title("Imported {$result['imported']} user(s), skipped {$result['skipped']}")

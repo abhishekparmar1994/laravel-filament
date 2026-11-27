@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Support\ImpersonationManager;
+use App\Support\SystemNotifier;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -33,8 +35,21 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Event::listen(Login::class, function (Login $event): void {
-            if ($event->user instanceof User) {
-                $event->user->forceFill(['last_login_at' => now()])->saveQuietly();
+            if (! ($event->user instanceof User)) {
+                return;
+            }
+
+            $event->user->forceFill(['last_login_at' => now()])->saveQuietly();
+
+            if (! ImpersonationManager::isImpersonating()) {
+                $ip = request()?->ip() ?? 'unknown IP';
+
+                SystemNotifier::notifyUser(
+                    $event->user,
+                    'New Sign-In Recorded',
+                    "Signed in from {$ip}.",
+                    'info',
+                );
             }
         });
     }

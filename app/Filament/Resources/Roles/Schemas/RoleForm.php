@@ -14,9 +14,11 @@ class RoleForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 Section::make('Role Details')
                     ->columns(2)
+                    ->columnSpanFull()
                     ->schema([
                         TextInput::make('name')
                             ->required()
@@ -39,6 +41,7 @@ class RoleForm
                             ->columnSpanFull(),
                     ]),
                 Section::make('Permissions')
+                    ->columnSpanFull()
                     ->schema([
                         CheckboxList::make('permissions')
                             ->relationship('permissions', 'name')

@@ -48,7 +48,7 @@ class AdvancedBoilerplateTest extends TestCase
         $this->assertTrue($panel->hasMultiFactorAuthentication());
 
         $request = Request::create('/admin');
-        $response = (new SecurityHeaders)->handle($request, fn(): Response => response('ok'));
+        $response = (new SecurityHeaders)->handle($request, fn (): Response => response('ok'));
 
         $this->assertSame('SAMEORIGIN', $response->headers->get('X-Frame-Options'));
         $this->assertSame('nosniff', $response->headers->get('X-Content-Type-Options'));
@@ -89,21 +89,21 @@ class AdvancedBoilerplateTest extends TestCase
 
         Livewire::test(ManageAppearance::class)
             ->fillForm([
-                'theme' => 'indigo',
+                'theme' => 'modern',
                 'locale' => 'es',
             ])
             ->call('save')
             ->assertHasNoFormErrors();
 
         $updated = $admin->fresh();
-        $this->assertSame('indigo', $updated->theme);
+        $this->assertSame('modern', $updated->theme);
         $this->assertSame('es', $updated->locale);
 
         app()->setLocale('en');
         $request = Request::create('/admin');
-        $request->setUserResolver(fn(): User => $updated);
+        $request->setUserResolver(fn (): User => $updated);
 
-        (new ApplyUserLocale)->handle($request, fn(): Response => response('ok'));
+        (new ApplyUserLocale)->handle($request, fn (): Response => response('ok'));
         $this->assertSame('es', app()->getLocale());
     }
 
@@ -176,7 +176,7 @@ class AdvancedBoilerplateTest extends TestCase
             ->callAction('sendTestEmail', data: ['recipient' => 'check@example.com'])
             ->assertHasNoActionErrors();
 
-        Mail::assertSent(TestMail::class, fn(TestMail $mail): bool => $mail->hasTo('check@example.com'));
+        Mail::assertSent(TestMail::class, fn (TestMail $mail): bool => $mail->hasTo('check@example.com'));
 
         $csv = "name,email,password\nAlice Example,alice@example.com,pass12345\nDuplicate,alice@example.com,pass12345\nInvalid Row,not-an-email,pass12345";
         $summary = ListUsers::importFromCsvContent($csv);

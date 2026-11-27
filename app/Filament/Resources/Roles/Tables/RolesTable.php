@@ -22,14 +22,30 @@ class RolesTable
                     ->badge()
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('permissions_count')
+                TextColumn::make('permissions.name')
                     ->label('Permissions')
-                    ->counts('permissions')
-                    ->sortable(),
-                TextColumn::make('users_count')
+                    ->badge()
+                    ->limitList(3)
+                    ->expandableLimitedList()
+                    ->placeholder('None')
+                    ->searchable(),
+                TextColumn::make('users.name')
                     ->label('Users')
+                    ->badge()
+                    ->limitList(3)
+                    ->expandableLimitedList()
+                    ->placeholder('None')
+                    ->searchable(),
+                TextColumn::make('permissions_count')
+                    ->label('Permission Count')
+                    ->counts('permissions')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('users_count')
+                    ->label('User Count')
                     ->counts('users')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

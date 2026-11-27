@@ -3,7 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Concerns\InvalidatesBoilerplateCaches;
 use App\Models\Concerns\LogsModelActivity;
+use App\Support\PermissionCache;
 use Database\Factories\UserFactory;
 use Filament\Auth\MultiFactor\App\Concerns\InteractsWithAppAuthentication;
 use Filament\Auth\MultiFactor\App\Concerns\InteractsWithAppAuthenticationRecovery;
@@ -31,6 +33,7 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
         InteractsWithAppAuthentication,
         InteractsWithAppAuthenticationRecovery,
         InteractsWithEmailAuthentication,
+        InvalidatesBoilerplateCaches,
         LogsModelActivity,
         Notifiable,
         SoftDeletes;
@@ -71,7 +74,9 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
             return $this->roles->whereIn('slug', $roleSlugs)->isNotEmpty();
         }
 
-        return $this->roles()->whereIn('slug', $roleSlugs)->exists();
+        $cachedRoles = PermissionCache::forUser($this)['roles'];
+
+        return array_intersect($roleSlugs, $cachedRoles) !== [];
     }
 
     /**
@@ -89,9 +94,7 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
             );
         }
 
-        return $this->roles()
-            ->whereHas('permissions', fn ($query) => $query->where('slug', $permission))
-            ->exists();
+        return in_array($permission, PermissionCache::forUser($this)['permissions'], true);
     }
 
     /**

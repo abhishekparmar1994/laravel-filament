@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\InvalidatesBoilerplateCaches;
 use App\Models\Concerns\LogsModelActivity;
 use Database\Factories\RoleFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Role extends Model
 {
     /** @use HasFactory<RoleFactory> */
-    use HasFactory, LogsModelActivity;
+    use HasFactory, InvalidatesBoilerplateCaches, LogsModelActivity;
 
     /**
      * Permissions assigned to this role.

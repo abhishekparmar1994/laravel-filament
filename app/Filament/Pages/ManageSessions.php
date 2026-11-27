@@ -2,6 +2,8 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\User;
+use App\Support\SystemNotifier;
 use BackedEnum;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -61,6 +63,13 @@ class ManageSessions extends Page
             ->where('id', $sessionId)
             ->delete();
 
+        $user = auth()->user();
+
+        if ($user instanceof User) {
+            SystemNotifier::notifyUser($user, 'Browser Session Revoked', 'A signed-in device session was revoked.', 'warning');
+            $this->dispatch('databaseNotificationsSent');
+        }
+
         Notification::make()
             ->title('Session revoked')
             ->success()
@@ -73,6 +82,13 @@ class ManageSessions extends Page
             ->where('user_id', auth()->id())
             ->where('id', '!=', session()->getId())
             ->delete();
+
+        $user = auth()->user();
+
+        if ($user instanceof User) {
+            SystemNotifier::notifyUser($user, 'Other Sessions Logged Out', 'All other browser sessions were revoked.', 'warning');
+            $this->dispatch('databaseNotificationsSent');
+        }
 
         Notification::make()
             ->title('All other browser sessions revoked')

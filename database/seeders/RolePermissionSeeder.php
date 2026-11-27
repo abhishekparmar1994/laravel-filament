@@ -6,6 +6,8 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Setting;
 use App\Models\User;
+use App\Support\DashboardCache;
+use App\Support\PermissionCache;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
 
@@ -112,5 +114,8 @@ class RolePermissionSeeder extends Seeder
                 }
             }
         }
+
+        PermissionCache::flush();
+        DashboardCache::flush();
     }
 }

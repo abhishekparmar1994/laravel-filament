@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Support\DashboardCache;
+use App\Support\PermissionCache;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -28,5 +30,8 @@ class DatabaseSeeder extends Seeder
         if ($superAdmin !== null) {
             $user->roles()->syncWithoutDetaching([$superAdmin->id]);
         }
+
+        PermissionCache::flush();
+        DashboardCache::flush();
     }
 }

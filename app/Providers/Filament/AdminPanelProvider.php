@@ -19,6 +19,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
@@ -42,7 +43,7 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->brandName(fn (): string => (string) Setting::getValue('site_name', config('app.name')))
             ->spa(hasPrefetching: true)
-            ->topbar(false)
+            ->font('Plus Jakarta Sans')
             ->serifFont('Lora')
             ->login()
             ->profile()
@@ -54,6 +55,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->databaseNotifications()
             ->sidebarCollapsibleOnDesktop()
+            ->maxContentWidth(Width::Full)
             ->colors(ThemeManager::colorsFor(ThemeManager::DEFAULT_THEME))
             ->userMenuItems([
                 Action::make('appearance')

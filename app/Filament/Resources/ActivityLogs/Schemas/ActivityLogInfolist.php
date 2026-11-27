@@ -11,9 +11,11 @@ class ActivityLogInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 Section::make('Audit Details')
                     ->columns(2)
+                    ->columnSpanFull()
                     ->schema([
                         TextEntry::make('event')
                             ->badge(),

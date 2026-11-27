@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\User;
+use App\Support\DashboardCache;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Carbon;
 
@@ -25,22 +26,24 @@ class UserGrowthChart extends ChartWidget
      */
     public static function dailySignups(int $days = 7): array
     {
-        $start = now()->subDays($days - 1)->startOfDay();
+        return DashboardCache::remember("daily_signups:{$days}", function () use ($days): array {
+            $start = now()->subDays($days - 1)->startOfDay();
 
-        $countsByDate = User::query()
-            ->where('created_at', '>=', $start)
-            ->get(['created_at'])
-            ->groupBy(fn (User $user): string => Carbon::parse($user->created_at)->format('Y-m-d'))
-            ->map->count();
+            $countsByDate = User::query()
+                ->where('created_at', '>=', $start)
+                ->get(['created_at'])
+                ->groupBy(fn (User $user): string => Carbon::parse($user->created_at)->format('Y-m-d'))
+                ->map->count();
 
-        $series = [];
+            $series = [];
 
-        for ($offset = 0; $offset < $days; $offset++) {
-            $date = $start->copy()->addDays($offset);
-            $series[$date->format('M j')] = (int) ($countsByDate[$date->format('Y-m-d')] ?? 0);
-        }
+            for ($offset = 0; $offset < $days; $offset++) {
+                $date = $start->copy()->addDays($offset);
+                $series[$date->format('M j')] = (int) ($countsByDate[$date->format('Y-m-d')] ?? 0);
+            }
 
-        return $series;
+            return $series;
+        });
     }
 
     /**

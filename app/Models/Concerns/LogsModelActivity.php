@@ -5,8 +5,8 @@ namespace App\Models\Concerns;
 use App\Models\ActivityLog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Schema;
 
 trait LogsModelActivity
 {
@@ -54,22 +54,23 @@ trait LogsModelActivity
      */
     protected static function recordActivity(Model $model, string $event, array $properties = []): void
     {
-        // Guard against unit tests or early boot paths where activity_logs has not been migrated yet.
-        if (! Schema::hasTable('activity_logs')) {
-            return;
-        }
-
         $label = class_basename($model);
+        $subjectName = $model->getAttribute('name') ?? $model->getAttribute('key');
+        $identifier = filled($subjectName) ? "\"{$subjectName}\" (#{$model->getKey()})" : "#{$model->getKey()}";
 
-        ActivityLog::query()->create([
-            'user_id' => auth()->id(),
-            'event' => $event,
-            'subject_type' => $model::class,
-            'subject_id' => $model->getKey(),
-            'description' => "{$label} #{$model->getKey()} was {$event}",
-            'properties' => $properties === [] ? null : $properties,
-            'ip_address' => request()?->ip(),
-        ]);
+        try {
+            ActivityLog::query()->create([
+                'user_id' => auth()->id(),
+                'event' => $event,
+                'subject_type' => $model::class,
+                'subject_id' => $model->getKey(),
+                'description' => "{$label} {$identifier} was {$event}",
+                'properties' => $properties === [] ? null : $properties,
+                'ip_address' => request()?->ip(),
+            ]);
+        } catch (QueryException) {
+            // Skip logging cleanly if migrations for activity_logs have not run yet.
+        }
     }
 
     /**

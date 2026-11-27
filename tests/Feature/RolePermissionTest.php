@@ -57,7 +57,9 @@ class RolePermissionTest extends TestCase
         $this->actingAs($admin);
 
         Livewire::test(ListRoles::class)
-            ->assertOk();
+            ->assertOk()
+            ->assertSee($admin->name)
+            ->assertSee('View Users');
 
         Livewire::test(CreateRole::class)
             ->fillForm([
@@ -92,7 +94,8 @@ class RolePermissionTest extends TestCase
         $this->actingAs($admin);
 
         Livewire::test(ListPermissions::class)
-            ->assertOk();
+            ->assertOk()
+            ->assertSee('Super Admin');
 
         Livewire::test(CreatePermission::class)
             ->fillForm([

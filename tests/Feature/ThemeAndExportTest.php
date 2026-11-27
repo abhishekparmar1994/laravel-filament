@@ -51,7 +51,7 @@ class ThemeAndExportTest extends TestCase
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertArrayHasKey('primary', FilamentColor::getColors());
-        $this->assertSame('soft', ThemeManager::resolveForUser(User::factory()->make(['theme' => 'unknown'])));
+        $this->assertSame(ThemeManager::DEFAULT_THEME, ThemeManager::resolveForUser(User::factory()->make(['theme' => 'unknown'])));
     }
 
     public function test_can_view_user_infolist_and_filter_users_table(): void

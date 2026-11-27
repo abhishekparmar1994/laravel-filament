@@ -4,6 +4,8 @@ namespace App\Filament\Pages;
 
 use App\Mail\TestMail;
 use App\Models\Setting;
+use App\Models\User;
+use App\Support\SystemNotifier;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
@@ -62,6 +64,29 @@ class ManageSettings extends Page
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('sendTestNotification')
+                ->label('Send Test Notification')
+                ->icon(Heroicon::OutlinedBell)
+                ->color('gray')
+                ->action(function (): void {
+                    $user = auth()->user();
+
+                    if ($user instanceof User) {
+                        SystemNotifier::notifyUser(
+                            $user,
+                            'Test Database Notification',
+                            'Your database notifications drawer is configured and working.',
+                            'success',
+                        );
+
+                        $this->dispatch('databaseNotificationsSent');
+                    }
+
+                    Notification::make()
+                        ->title('Test notification sent to your Notifications drawer')
+                        ->success()
+                        ->send();
+                }),
             Action::make('sendTestEmail')
                 ->label('Send Test Email')
                 ->icon(Heroicon::OutlinedEnvelope)
@@ -88,9 +113,11 @@ class ManageSettings extends Page
     public function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 Section::make('General')
                     ->columns(2)
+                    ->columnSpanFull()
                     ->schema([
                         TextInput::make('site_name')
                             ->label('Application Name')
@@ -151,6 +178,15 @@ class ManageSettings extends Page
         Setting::setValue('support_email', $state['support_email'], 'general', 'string');
         Setting::setValue('maintenance_banner', $state['maintenance_banner'] ?? '', 'system', 'string');
         Setting::setValue('registration_enabled', (bool) ($state['registration_enabled'] ?? false), 'auth', 'boolean');
+
+        $actor = auth()->user();
+
+        SystemNotifier::notifyAdmins(
+            'Application Settings Updated',
+            'System configuration was updated.',
+            'info',
+            $actor instanceof User ? $actor : null,
+        );
 
         Notification::make()
             ->title('Settings saved')
