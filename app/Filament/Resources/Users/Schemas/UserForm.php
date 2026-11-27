@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -37,6 +38,11 @@ class UserForm
                             ->multiple()
                             ->preload()
                             ->searchable(),
+                        Toggle::make('is_active')
+                            ->label('Active Account')
+                            ->default(true)
+                            ->helperText('Inactive users cannot sign in to the admin panel.')
+                            ->columnSpanFull(),
                     ]),
             ]);
     }

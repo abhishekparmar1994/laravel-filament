@@ -26,4 +26,18 @@ class UserPolicy
 
         return $this->hasDeletePermission($user, $model);
     }
+
+    public function restore(User $user, Model $model): bool
+    {
+        return $this->hasDeletePermission($user, $model);
+    }
+
+    public function forceDelete(User $user, Model $model): bool
+    {
+        if ($user->is($model)) {
+            return false;
+        }
+
+        return $this->hasDeletePermission($user, $model);
+    }
 }

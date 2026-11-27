@@ -4,13 +4,15 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class RolePermissionSeeder extends Seeder
 {
     /**
-     * Seed default roles, permissions, and assign Super Admin to the first user if none exists.
+     * Seed default roles, permissions, settings, and assign Super Admin to the first user if none exists.
      */
     public function run(): void
     {
@@ -22,6 +24,7 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'Create Users', 'slug' => 'users.create', 'group' => 'users'],
             ['name' => 'Update Users', 'slug' => 'users.update', 'group' => 'users'],
             ['name' => 'Delete Users', 'slug' => 'users.delete', 'group' => 'users'],
+            ['name' => 'Impersonate Users', 'slug' => 'users.impersonate', 'group' => 'users'],
 
             ['name' => 'View Roles', 'slug' => 'roles.view_any', 'group' => 'roles'],
             ['name' => 'View Role Details', 'slug' => 'roles.view', 'group' => 'roles'],
@@ -34,6 +37,12 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'Create Permissions', 'slug' => 'permissions.create', 'group' => 'permissions'],
             ['name' => 'Update Permissions', 'slug' => 'permissions.update', 'group' => 'permissions'],
             ['name' => 'Delete Permissions', 'slug' => 'permissions.delete', 'group' => 'permissions'],
+
+            ['name' => 'View Activity Logs', 'slug' => 'activity_logs.view_any', 'group' => 'system'],
+            ['name' => 'View Activity Log Details', 'slug' => 'activity_logs.view', 'group' => 'system'],
+            ['name' => 'Manage Settings', 'slug' => 'settings.manage', 'group' => 'system'],
+            ['name' => 'Manage Queue Jobs', 'slug' => 'system.jobs', 'group' => 'system'],
+            ['name' => 'View System Health & Logs', 'slug' => 'system.logs', 'group' => 'system'],
         ];
 
         $permissionsBySlug = collect($permissionDefinitions)
@@ -54,7 +63,7 @@ class RolePermissionSeeder extends Seeder
 
         $admin = Role::query()->updateOrCreate(
             ['slug' => 'admin'],
-            ['name' => 'Admin', 'description' => 'Manage users and view roles and permissions.'],
+            ['name' => 'Admin', 'description' => 'Manage users and view roles, permissions, and audit logs.'],
         );
         $admin->permissions()->sync([
             $permissionsBySlug['panel.access'],
@@ -66,6 +75,8 @@ class RolePermissionSeeder extends Seeder
             $permissionsBySlug['roles.view'],
             $permissionsBySlug['permissions.view_any'],
             $permissionsBySlug['permissions.view'],
+            $permissionsBySlug['activity_logs.view_any'],
+            $permissionsBySlug['activity_logs.view'],
         ]);
 
         $viewer = Role::query()->updateOrCreate(
@@ -84,6 +95,22 @@ class RolePermissionSeeder extends Seeder
 
         if (! $hasSuperAdmin) {
             User::query()->oldest('id')->first()?->roles()->syncWithoutDetaching([$superAdmin->id]);
+        }
+
+        if (Schema::hasTable('settings')) {
+            $defaults = [
+                ['key' => 'site_name', 'value' => config('app.name', 'Laravel'), 'group' => 'general', 'type' => 'string'],
+                ['key' => 'site_tagline', 'value' => 'Startup Admin Boilerplate', 'group' => 'general', 'type' => 'string'],
+                ['key' => 'support_email', 'value' => 'support@example.com', 'group' => 'general', 'type' => 'string'],
+                ['key' => 'maintenance_banner', 'value' => '', 'group' => 'system', 'type' => 'string'],
+                ['key' => 'registration_enabled', 'value' => '0', 'group' => 'auth', 'type' => 'boolean'],
+            ];
+
+            foreach ($defaults as $default) {
+                if (! Setting::query()->where('key', $default['key'])->exists()) {
+                    Setting::setValue($default['key'], $default['value'], $default['group'], $default['type']);
+                }
+            }
         }
     }
 }

@@ -3,63 +3,121 @@
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
 
-/* Soft Theme-inspired aesthetic: warm cream canvas, serif headings, filled inputs, and pill actions */
-.fi-body {
-    background-color: #f6f3ec;
-}
-
-.dark .fi-body {
-    background-color: #161513;
-}
-
-.fi-simple-layout {
-    background-color: #f6f3ec;
-}
-
-.dark .fi-simple-layout {
-    background-color: #161513;
-}
-
-.fi-logo,
-.fi-header-heading,
-.fi-simple-header-heading,
-.fi-section-header-heading {
-    @apply font-serif tracking-tight;
-}
-
-.fi-sidebar {
-    @apply lg:border-e lg:border-gray-200/70 lg:bg-transparent dark:lg:border-white/10;
-}
-
-.fi-sidebar-item-btn,
-.fi-sidebar-database-notifications-btn {
-    @apply rounded-full px-3;
-}
-
-.fi-sidebar-item.fi-active>.fi-sidebar-item-btn {
-    @apply bg-primary-100/90 text-primary-800 dark:bg-primary-950/60 dark:text-primary-300;
-}
-
-.fi-sidebar-item.fi-active>.fi-sidebar-item-btn>.fi-icon,
-.fi-sidebar-item.fi-active>.fi-sidebar-item-btn>.fi-sidebar-item-label {
-    @apply text-primary-800 dark:text-primary-300;
-}
-
-.fi-global-search-ctn .fi-input-wrp {
-    @apply rounded-full;
-}
-
-.fi-input-wrp {
-    @apply rounded-xl bg-gray-100/90 shadow-none ring-gray-950/8 dark:bg-white/6 dark:ring-white/15;
-}
-
-.fi-btn,
-.fi-badge {
-    @apply rounded-full;
-}
-
+/* Shared smooth transitions & card rounding */
 .fi-section:not(.fi-section-not-contained):not(.fi-aside),
 .fi-ta-ctn,
 .fi-simple-main {
     @apply rounded-2xl shadow-xs ring-gray-950/6 dark:ring-white/10;
+}
+
+/* Soft Theme (default) */
+:root[data-theme='soft'] .fi-body,
+:root[data-theme='soft'] .fi-simple-layout,
+:root:not([data-theme]) .fi-body,
+:root:not([data-theme]) .fi-simple-layout {
+    background-color: #f6f3ec;
+}
+
+:root[data-theme='soft'].dark .fi-body,
+:root[data-theme='soft'].dark .fi-simple-layout,
+:root:not([data-theme]).dark .fi-body,
+:root:not([data-theme]).dark .fi-simple-layout {
+    background-color: #161513;
+}
+
+:root[data-theme='soft'] .fi-logo,
+:root[data-theme='soft'] .fi-header-heading,
+:root[data-theme='soft'] .fi-simple-header-heading,
+:root[data-theme='soft'] .fi-section-header-heading,
+:root:not([data-theme]) .fi-logo,
+:root:not([data-theme]) .fi-header-heading,
+:root:not([data-theme]) .fi-simple-header-heading,
+:root:not([data-theme]) .fi-section-header-heading {
+    @apply font-serif tracking-tight;
+}
+
+:root[data-theme='soft'] .fi-sidebar,
+:root:not([data-theme]) .fi-sidebar {
+    @apply lg:border-e lg:border-gray-200/70 lg:bg-transparent dark:lg:border-white/10;
+}
+
+:root[data-theme='soft'] .fi-sidebar-item-btn,
+:root[data-theme='soft'] .fi-sidebar-database-notifications-btn,
+:root:not([data-theme]) .fi-sidebar-item-btn,
+:root:not([data-theme]) .fi-sidebar-database-notifications-btn {
+    @apply rounded-full px-3;
+}
+
+:root[data-theme='soft'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn,
+:root:not([data-theme]) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    @apply bg-primary-100/90 text-primary-800 dark:bg-primary-950/60 dark:text-primary-300;
+}
+
+:root[data-theme='soft'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon,
+:root[data-theme='soft'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label,
+:root:not([data-theme]) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon,
+:root:not([data-theme]) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
+    @apply text-primary-800 dark:text-primary-300;
+}
+
+:root[data-theme='soft'] .fi-global-search-ctn .fi-input-wrp,
+:root[data-theme='soft'] .fi-btn,
+:root[data-theme='soft'] .fi-badge,
+:root:not([data-theme]) .fi-global-search-ctn .fi-input-wrp,
+:root:not([data-theme]) .fi-btn,
+:root:not([data-theme]) .fi-badge {
+    @apply rounded-full;
+}
+
+:root[data-theme='soft'] .fi-input-wrp,
+:root:not([data-theme]) .fi-input-wrp {
+    @apply rounded-xl bg-gray-100/90 shadow-none ring-gray-950/8 dark:bg-white/6 dark:ring-white/15;
+}
+
+/* Rose Theme */
+:root[data-theme='rose'] .fi-body {
+    @apply bg-primary-50/35 dark:bg-gray-950;
+}
+
+:root[data-theme='rose'] .fi-simple-layout {
+    @apply bg-gradient-to-br from-primary-50 via-white to-primary-100/60 dark:from-gray-950 dark:via-gray-950 dark:to-primary-950/30;
+}
+
+:root[data-theme='rose'] .fi-sidebar {
+    @apply lg:border-e lg:border-gray-200/80 lg:bg-white/85 lg:backdrop-blur-md dark:lg:border-white/10 dark:lg:bg-gray-900/85;
+}
+
+:root[data-theme='rose'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    @apply bg-primary-50 ring-1 ring-primary-200/70 dark:bg-primary-950/60 dark:ring-primary-800/50;
+}
+
+/* Indigo Theme */
+:root[data-theme='indigo'] .fi-body {
+    @apply bg-gray-50 dark:bg-gray-950;
+}
+
+:root[data-theme='indigo'] .fi-sidebar {
+    @apply lg:border-e lg:border-gray-200/80 lg:bg-white dark:lg:border-white/10 dark:lg:bg-gray-900;
+}
+
+:root[data-theme='indigo'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    @apply bg-primary-50/90 dark:bg-primary-950/60;
+}
+
+/* Noir Theme */
+:root[data-theme='noir'] .fi-body {
+    @apply bg-gray-100 dark:bg-gray-950;
+}
+
+:root[data-theme='noir'] .fi-sidebar {
+    @apply lg:border-e lg:border-gray-200 lg:bg-white/95 dark:lg:border-white/10 dark:lg:bg-gray-950;
+}
+
+:root[data-theme='noir'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    @apply bg-gray-900 text-white dark:bg-white/10 dark:text-primary-400;
+}
+
+:root[data-theme='noir'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon,
+:root[data-theme='noir'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
+    @apply text-white dark:text-primary-400;
 }
